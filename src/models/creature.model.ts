@@ -15,7 +15,7 @@ export interface Attack {
   power: number;
   accuracy: number; // 0-100
   animationType: 'physical' | 'projectile' | 'status';
-  effect?: 'paralyze' | 'burn' | 'heal' | 'stat_up' | 'stat_down';
+  effect?: 'paralyzed' | 'burned' | 'heal' | 'stat_up' | 'stat_down';
   effectChance?: number; // 0-1
   target?: 'self' | 'opponent';
   stat?: Stat;

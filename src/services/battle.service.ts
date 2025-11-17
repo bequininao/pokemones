@@ -239,7 +239,7 @@ export class BattleService {
         this.addLog(`${defender.name}'s Static paralyzed ${attacker.name}!`);
         this.animationEvent.set({ type: 'ability_trigger', target: defenderRef, abilityName: 'Static' });
         await this.delay(800);
-        this.applyStatusEffect('paralyze', attackerSignal);
+        this.applyStatusEffect('paralyzed', attackerSignal);
         await this.delay(800);
     }
     
@@ -262,7 +262,7 @@ export class BattleService {
     }
 
     if (attack.effect && attack.effectChance && Math.random() < attack.effectChance) {
-        if (attack.effect === 'paralyze' || attack.effect === 'burn') {
+        if (attack.effect === 'paralyzed' || attack.effect === 'burned') {
              this.applyStatusEffect(attack.effect, defenderSignal);
              await this.delay(800);
         }
@@ -327,10 +327,10 @@ export class BattleService {
     });
   }
   
-  private applyStatusEffect(effect: 'paralyze' | 'burn', target: WritableSignal<Creature | null>) {
+  private applyStatusEffect(effect: 'paralyzed' | 'burned', target: WritableSignal<Creature | null>) {
     if (target()!.status !== 'none') return;
     target.update(c => c ? ({...c, status: effect}) : null);
-    this.addLog(`${target()!.name} was ${effect}d!`);
+    this.addLog(`${target()!.name} was ${effect}!`);
     const targetRef = target === this.activePlayerCreature ? 'player' : 'opponent';
     this.animationEvent.set({ type: 'status_effect', target: targetRef, effect});
   }

@@ -11,9 +11,9 @@ export const ATTACKS: { [key: string]: Attack } = {
   HYPER_BEAM: { name: 'Hyper Beam', type: 'Normal', power: 150, accuracy: 90, animationType: 'projectile' },
 
   // Fire
-  EMBER: { name: 'Ember', type: 'Fire', power: 40, accuracy: 100, effect: 'burn', effectChance: 0.1, animationType: 'projectile' },
-  FLAME_WHEEL: { name: 'Flame Wheel', type: 'Fire', power: 60, accuracy: 100, effect: 'burn', effectChance: 0.1, animationType: 'physical' },
-  FLAMETHROWER: { name: 'Flamethrower', type: 'Fire', power: 90, accuracy: 100, effect: 'burn', effectChance: 0.1, animationType: 'projectile' },
+  EMBER: { name: 'Ember', type: 'Fire', power: 40, accuracy: 100, effect: 'burned', effectChance: 0.1, animationType: 'projectile' },
+  FLAME_WHEEL: { name: 'Flame Wheel', type: 'Fire', power: 60, accuracy: 100, effect: 'burned', effectChance: 0.1, animationType: 'physical' },
+  FLAMETHROWER: { name: 'Flamethrower', type: 'Fire', power: 90, accuracy: 100, effect: 'burned', effectChance: 0.1, animationType: 'projectile' },
   
   // Water
   WATER_GUN: { name: 'Water Gun', type: 'Water', power: 40, accuracy: 100, animationType: 'projectile' },
@@ -23,12 +23,12 @@ export const ATTACKS: { [key: string]: Attack } = {
   // Grass
   VINE_WHIP: { name: 'Vine Whip', type: 'Grass', power: 45, accuracy: 100, animationType: 'physical' },
   RAZOR_LEAF: { name: 'Razor Leaf', type: 'Grass', power: 55, accuracy: 95, animationType: 'physical' },
-  STUN_SPORE: { name: 'Stun Spore', type: 'Grass', power: 0, accuracy: 75, effect: 'paralyze', animationType: 'status' },
+  STUN_SPORE: { name: 'Stun Spore', type: 'Grass', power: 0, accuracy: 75, effect: 'paralyzed', animationType: 'status' },
   
   // Electric
-  THUNDER_SHOCK: { name: 'Thunder Shock', type: 'Electric', power: 40, accuracy: 100, effect: 'paralyze', effectChance: 0.1, animationType: 'status' },
-  SPARK: { name: 'Spark', type: 'Electric', power: 65, accuracy: 100, effect: 'paralyze', effectChance: 0.3, animationType: 'physical' },
-  THUNDERBOLT: { name: 'Thunderbolt', type: 'Electric', power: 90, accuracy: 100, effect: 'paralyze', effectChance: 0.1, animationType: 'projectile' },
+  THUNDER_SHOCK: { name: 'Thunder Shock', type: 'Electric', power: 40, accuracy: 100, effect: 'paralyzed', effectChance: 0.1, animationType: 'status' },
+  SPARK: { name: 'Spark', type: 'Electric', power: 65, accuracy: 100, effect: 'paralyzed', effectChance: 0.3, animationType: 'physical' },
+  THUNDERBOLT: { name: 'Thunderbolt', type: 'Electric', power: 90, accuracy: 100, effect: 'paralyzed', effectChance: 0.1, animationType: 'projectile' },
 
   // Rock
   ROCK_THROW: { name: 'Rock Throw', type: 'Rock', power: 50, accuracy: 90, animationType: 'physical' },
@@ -45,7 +45,7 @@ export const ATTACKS: { [key: string]: Attack } = {
   PSYCHIC: { name: 'Psychic', type: 'Psychic', power: 90, accuracy: 100, animationType: 'projectile' },
 
   // Ghost
-  LICK: { name: 'Lick', type: 'Ghost', power: 30, accuracy: 100, effect: 'paralyze', effectChance: 0.3, animationType: 'physical' },
+  LICK: { name: 'Lick', type: 'Ghost', power: 30, accuracy: 100, effect: 'paralyzed', effectChance: 0.3, animationType: 'physical' },
   SHADOW_BALL: { name: 'Shadow Ball', type: 'Ghost', power: 80, accuracy: 100, animationType: 'projectile' },
 
   // Fighting
