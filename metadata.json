@@ -1,0 +1,5 @@
+{
+  "name": "Creature Combat Arena",
+  "description": "A complete turn-based combat system inspired by Pokémon. Engage in battles with unique creatures, each with distinct types, stats, and powerful attacks. Experience strategic, animated gameplay with type effectiveness, status effects, and dynamic turn order.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,24 @@
+@if (creature(); as c) {
+  <div class="bg-gray-800/80 border-4 border-gray-600 rounded-lg p-3 w-72 shadow-lg backdrop-blur-sm relative">
+    <div class="flex justify-between items-center mb-1">
+      <h3 class="text-xl font-bold tracking-wider">{{ c.name }}</h3>
+      <span class="text-lg font-mono">Lv{{ c.level }}</span>
+    </div>
+    <div class="absolute top-1 right-24 text-yellow-300 font-bold text-xs bg-gray-900/50 px-2 rounded-md">
+      {{ c.ability.name }}
+    </div>
+    <div class="relative w-full bg-gray-700 rounded-full h-4 border-2 border-gray-500 overflow-hidden">
+      <div 
+        class="h-full rounded-full transition-all duration-500 ease-out flex items-center justify-start pl-2 text-xs font-bold text-white" 
+        [class]="hpBarClass()" 
+        [style.width.%]="hpPercentage()">
+         HP
+      </div>
+    </div>
+    @if (isPlayer()) {
+      <div class="text-right mt-1 font-mono text-lg">
+        <span>{{ c.currentHp }}</span> / <span>{{ c.baseStats.maxHp }}</span>
+      </div>
+    }
+  </div>
+}

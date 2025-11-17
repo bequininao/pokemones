@@ -1,0 +1,209 @@
+<main class="w-full h-screen flex flex-col items-center justify-center p-2 bg-black">
+  @switch (appState()) {
+    @case ('team_selection') {
+      <div class="w-full max-w-5xl h-full flex flex-col items-center p-4 bg-gray-800 rounded-lg shadow-xl">
+        <h1 class="text-4xl font-bold tracking-wider mb-2 text-yellow-300">CHOOSE YOUR TEAM</h1>
+        <p class="mb-4 text-lg">Select 6 creatures to battle.</p>
+        
+        <div class="grid grid-cols-6 gap-3 flex-grow overflow-y-auto p-2 bg-gray-900/50 rounded-md">
+          @for (creature of allCreatures(); track creature.id) {
+            <div (click)="toggleCreatureInTeam(creature)" 
+                 class="relative p-2 rounded-lg cursor-pointer transition-all duration-200"
+                 [class.bg-blue-500/50]="isSelected(creature)"
+                 [class.hover:bg-gray-700]="!isSelected(creature)"
+                 [class.border-4]="isSelected(creature)"
+                 [class.border-yellow-400]="isSelected(creature)">
+              <img [src]="creature.spriteUrl" [alt]="creature.name" class="w-24 h-24 mx-auto pixelated">
+              <p class="text-center font-semibold mt-1">{{ creature.name }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="mt-4 w-full flex flex-col items-center">
+          <h2 class="text-xl mb-2">Your Team ({{ selectedTeam().length }} / 6)</h2>
+          <div class="flex space-x-2 h-20 items-center bg-gray-900/50 p-2 rounded-lg">
+            @for (c of selectedTeam(); track c.id) {
+              <img [src]="c.spriteUrl" [alt]="c.name" class="w-16 h-16 pixelated">
+            }
+          </div>
+          <button (click)="confirmTeam()" [disabled]="!canConfirmTeam()"
+            class="mt-4 px-8 py-3 rounded-lg font-bold text-xl transition-colors duration-200 shadow-lg"
+            [class.bg-green-600]="canConfirmTeam()"
+            [class.hover:bg-green-700]="canConfirmTeam()"
+            [class.bg-gray-600]="!canConfirmTeam()"
+            [class.cursor-not-allowed]="!canConfirmTeam()"
+            [class.opacity-50]="!canConfirmTeam()">
+            Start Battle
+          </button>
+        </div>
+      </div>
+    }
+    @case ('battle') {
+      <div class="w-full max-w-4xl h-[calc(100vh-1rem)] bg-black/50 rounded-2xl shadow-2xl border-4 border-gray-700 flex flex-col relative overflow-hidden bg-cover bg-no-repeat bg-center" 
+           style="background-image: url('https://www.pidgi.net/wiki/images/8/8e/Battle_Background-Lush_Jungle-Day.png')">
+        
+        <!-- Battle Scene -->
+        <div class="flex-grow relative">
+          
+          <!-- Creatures & Platforms -->
+          <div class="absolute inset-0">
+            <!-- Opponent -->
+            <div class="absolute top-[15%] right-[10%] flex flex-col items-center" [class.animate-slide-in-right]="battlePhase() === 'intro'">
+              @if (opponentCreature(); as opponent) {
+                <div class="relative w-48 h-48" style="transform: scale(1.5);">
+                  <img [src]="opponent.spriteUrl" [alt]="opponent.name"
+                       class="pixelated object-contain w-full h-full transition-all"
+                       [class.shake-animation]="opponentAnimation() === 'hit'"
+                       [class.animate-physical-attack-opponent]="opponentAnimation() === 'attacking' && opponentAttackType() === 'physical'"
+                       [class.animate-status-effect]="opponentAnimation() === 'status'"
+                       [class.animate-ability-trigger]="opponentAnimation() === 'ability'"
+                       [class.faint-animation]="opponentAnimation() === 'fainted'">
+                </div>
+              }
+              <div class="w-64 h-8 bg-black/20 rounded-[50%] shadow-2xl mt-[-2rem]"></div>
+            </div>
+
+            <!-- Player -->
+            <div class="absolute bottom-[20%] left-[10%] flex flex-col items-center" [class.animate-slide-in-left]="battlePhase() === 'intro'">
+              @if (playerCreature(); as player) {
+                <div class="relative w-56 h-56" style="transform: scale(1.8);">
+                  <img [src]="player.backSpriteUrl" [alt]="player.name"
+                       class="pixelated object-contain w-full h-full transition-all"
+                       [class.shake-animation]="playerAnimation() === 'hit'"
+                       [class.animate-physical-attack-player]="playerAnimation() === 'attacking' && playerAttackType() === 'physical'"
+                       [class.animate-status-effect]="playerAnimation() === 'status'"
+                       [class.animate-ability-trigger]="playerAnimation() === 'ability'"
+                       [class.faint-animation]="playerAnimation() === 'fainted'">
+                </div>
+              }
+              <div class="w-72 h-10 bg-black/20 rounded-[50%] shadow-2xl mt-[-3rem]"></div>
+            </div>
+          </div>
+
+          <!-- HUDs -->
+          <div class="relative w-full h-full p-4">
+             <!-- Opponent HUD -->
+            <div class="absolute top-4 left-4" [class.animate-slide-in-left]="battlePhase() === 'intro'">
+              <div class="flex items-center gap-4">
+                <app-battle-hud [creature]="opponentCreature()"></app-battle-hud>
+                <div class="flex gap-1">
+                  @for(c of opponentTeam(); track c.uid) {
+                    <div class="w-4 h-4 rounded-full border-2 border-gray-300" 
+                         [class.bg-red-500]="c.currentHp > 0" 
+                         [class.bg-gray-600]="c.currentHp <= 0"></div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Player HUD -->
+            <div class="absolute bottom-4 right-4" [class.animate-slide-in-right]="battlePhase() === 'intro'">
+              <div class="flex items-center gap-4">
+                <div class="flex gap-1">
+                  @for(c of playerTeam(); track c.uid) {
+                    <div class="w-4 h-4 rounded-full border-2 border-gray-300" 
+                         [class.bg-red-500]="c.currentHp > 0" 
+                         [class.bg-gray-600]="c.currentHp <= 0"></div>
+                  }
+                </div>
+                <app-battle-hud [creature]="playerCreature()" [isPlayer]="true"></app-battle-hud>
+              </div>
+            </div>
+          </div>
+
+           <!-- Projectile -->
+          @if(projectile().active) {
+            <div class="w-8 h-8 rounded-full absolute shadow-lg border-2 border-white/50"
+              [class]="getProjectileColor(projectile().type)"
+              [class.left-1/4]="projectile().from === 'player'"
+              [class.bottom-1/2]="projectile().from === 'player'"
+              [class.right-1/4]="projectile().from === 'opponent'"
+              [class.top-1/3]="projectile().from === 'opponent'"
+              [class.transition-all]="true"
+              [class.duration-500]="true"
+              [class.ease-in]="true"
+              [style.transform]="projectile().from === 'player' ? 'translate(300%, -200%)' : 'translate(-300%, 200%)'">
+            </div>
+          }
+        </div>
+
+        <!-- UI Panel -->
+        <div class="h-40 bg-gray-900/70 border-t-4 border-gray-500 flex shrink-0 backdrop-blur-sm">
+          <div class="w-3/5 p-3">
+            <div class="w-full h-full flex items-center justify-start p-6 rounded-lg bg-gray-800/50">
+              <p class="text-2xl font-semibold tracking-wide text-white">{{ battleMessage() }}</p>
+            </div>
+          </div>
+          <div class="w-2/5 p-3">
+            @if (showActionMenu()) {
+              <div class="w-full h-full">
+                @switch (menuState()) {
+                  @case ('main') {
+                     @if (!isAwaitingSwitch()) {
+                      <div class="grid grid-cols-2 grid-rows-2 h-full gap-2 font-bold text-lg text-white">
+                        <button class="rounded-lg shadow-lg flex items-center justify-center transition-transform hover:scale-105 bg-red-600 hover:bg-red-700" (click)="onMainMenuSelect('attacks')">LUCHA</button>
+                        <button class="rounded-lg shadow-lg flex items-center justify-center transition-transform hover:scale-105 bg-blue-600 hover:bg-blue-700" (click)="onMainMenuSelect('team')">PKMN</button>
+                        <button class="rounded-lg shadow-lg flex items-center justify-center bg-yellow-600 opacity-50 cursor-not-allowed">MOCHILA</button>
+                        <button class="rounded-lg shadow-lg flex items-center justify-center bg-gray-600 opacity-50 cursor-not-allowed">HUIDA</button>
+                      </div>
+                     } @else {
+                        <button class="w-full h-full rounded-lg shadow-lg flex items-center justify-center transition-transform hover:scale-105 bg-blue-600 hover:bg-blue-700 font-bold text-lg text-white" (click)="menuState.set('team')">CAMBIAR</button>
+                     }
+                  }
+                  @case ('attacks') {
+                    <div class="w-full grid grid-cols-2 grid-rows-2 gap-2 h-full relative">
+                      <button (click)="menuState.set('main')" class="absolute -left-16 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 rounded-full w-12 h-12 flex items-center justify-center text-white text-2xl font-bold shadow-lg transition-transform hover:scale-110">←</button>
+                      @if(playerCreature(); as player) {
+                        @for (attack of player.attacks; track attack.name) {
+                          <button (click)="onAttack(attack)" [class]="getTypeColor(attack.type)"
+                                  class="w-full h-full rounded-lg text-white transition-transform duration-150 ease-in-out hover:scale-105 active:scale-100 shadow-md flex flex-col items-center justify-center p-1 text-center">
+                              <span class="font-bold text-sm leading-tight" style="text-shadow: 1px 1px 2px #000000a0;">{{ attack.name }}</span>
+                          </button>
+                        }
+                      }
+                    </div>
+                  }
+                  @case ('team') {
+                    <div class="w-full grid grid-cols-2 grid-rows-3 gap-2 h-full relative">
+                      @if (!isAwaitingSwitch()) {
+                        <button (click)="menuState.set('main')" class="absolute -left-16 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 rounded-full w-12 h-12 flex items-center justify-center text-white text-2xl font-bold shadow-lg transition-transform hover:scale-110">←</button>
+                      }
+                      @for (creature of playerTeam(); track creature.uid; let i = $index) {
+                        <button (click)="onSwitch(i)" class="bg-gray-700/70 hover:bg-gray-600/70 rounded-lg flex items-center p-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-gray-700/70 text-white"
+                                [disabled]="creature.currentHp <= 0 || creature.uid === playerCreature()?.uid">
+                            <img [src]="creature.spriteUrl" class="w-8 h-8 pixelated">
+                            <div class="text-left ml-2 flex-grow">
+                                <p class="font-bold text-xs">{{ creature.name }}</p>
+                                <div class="w-full bg-gray-500 h-1.5 rounded-full mt-1"><div class="bg-green-500 h-1.5 rounded-full" [style.width.%]="(creature.currentHp / creature.baseStats.maxHp) * 100"></div></div>
+                            </div>
+                        </button>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            } @else {
+              <div class="w-full h-full flex items-center justify-center p-3">
+                 <div class="w-full h-full flex items-center justify-start p-6 rounded-lg bg-gray-800/50">
+                    <p class="text-2xl font-semibold tracking-wide text-white animate-pulse">Processing...</p>
+                 </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    @case('game_over') {
+      <div class="w-full max-w-4xl h-full flex flex-col items-center justify-center p-4 bg-gray-800 rounded-lg shadow-xl text-center">
+         <h1 class="text-6xl font-bold mb-4" [class.text-green-400]="battleResult() === 'player_win'" [class.text-red-500]="battleResult() === 'player_lose'">
+           {{ battleResult() === 'player_win' ? 'You Won!' : 'You Were Defeated...' }}
+         </h1>
+         <p class="text-2xl mb-8">The battle is over.</p>
+         <button (click)="restartBattle()"
+              class="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-2xl transition-colors duration-200 shadow-lg">
+              Play Again
+          </button>
+      </div>
+    }
+  }
+</main>

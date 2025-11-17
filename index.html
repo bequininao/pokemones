@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Creature Combat Arena</title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Intro animations */
+    @keyframes slide-in-left {
+      0% { transform: translateX(-100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slide-in-right {
+      0% { transform: translateX(100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in-left { animation: slide-in-left 0.8s ease-out forwards; }
+    .animate-slide-in-right { animation: slide-in-right 0.8s ease-out forwards; }
+
+    /* Attack animations */
+    @keyframes physical-attack-player { 
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(100px, -50px) scale(1.2); }
+      100% { transform: translate(0, 0); }
+    }
+    @keyframes physical-attack-opponent { 
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-100px, 50px) scale(1.2); }
+      100% { transform: translate(0, 0); }
+    }
+    .animate-physical-attack-player { animation: physical-attack-player 0.6s ease-in-out; }
+    .animate-physical-attack-opponent { animation: physical-attack-opponent 0.6s ease-in-out; }
+    
+    /* Status effect animation */
+    @keyframes status-effect {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.7) drop-shadow(0 0 8px yellow); }
+    }
+   .animate-status-effect { animation: status-effect 0.8s ease-in-out; }
+
+    /* Ability trigger animation */
+    @keyframes ability-trigger {
+        0% { transform: scale(1); filter: drop-shadow(0 0 0px white); }
+        50% { transform: scale(1.05); filter: drop-shadow(0 0 12px cyan); }
+        100% { transform: scale(1); filter: drop-shadow(0 0 0px white); }
+    }
+    .animate-ability-trigger { animation: ability-trigger 1s ease-in-out; }
+
+    /* Custom animation for creature taking damage */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake-animation {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+     /* Custom animation for creature fainting */
+    @keyframes faint {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(40px) scale(0.8); }
+    }
+    .faint-animation {
+      animation: faint 0.7s ease-in-out forwards;
+    }
+
+    /* For crisp pixel art */
+    .pixelated {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.3.12?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.3.12?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.3.12?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.3.12?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.3.12/http?external=rxjs"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+  <app-root></app-root>
+</body>
+</html>
